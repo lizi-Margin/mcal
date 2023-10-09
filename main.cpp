@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #include <stack>
 
 using namespace std ;
@@ -61,14 +62,41 @@ int  getAnswer ( ) {
   
   char thisWord;
   bool flag = true;
-  for (int ii =0 ; flag != false &&( thisWord=s[ii])!=13 ; ii +=1){//和回车
+  bool figureFlag = false;
+  stack <char> * figureTempStack ;
+  for (int ii =0 ; flag != false &&( thisWord=s[ii])!=13 ; ii +=1){
     cout<< ii+1<<" Loop  " << thisWord<<endl; 
+    //isNum 判断
+    if ( isNum(thisWord)&& figureFlag == false) { figureFlag =true;
+      figureTempStack = new  stack<char>;
+      figureTempStack-> push(thisWord);
+    } 
+    else if (isNum(thisWord)&&figureFlag == true){
+      figureTempStack->push(thisWord);}
+    else if(!isNum(thisWord)&&figureFlag == true){
+      figureFlag = false;
+      int sum=0;
+      int iter = 1;
+      for( ; !figureTempStack->empty();){
+        sum+=(figureTempStack->top()-48)*iter;//死循环
+        figureTempStack->pop();
+        iter=iter * 10; 
+      }
+      delete figureTempStack;
+      mStack->push(sum);
+      ii--;
+      continue;
+    }
+    //等号判断
     if(isEq(thisWord)){flag = false;
       for (;!sStack->empty();)   //死循环！！！！！！
       {computeLast(mStack,sStack);}
     }
-   
-    if (isNum(thisWord)){mStack->push(thisWord-48);}
+
+
+
+
+    //其他判断
     if(isLeftKuohao(thisWord)){sStack ->push(thisWord);}
     if( isAsign(thisWord)){
       if ( sStack->empty() || getRank(thisWord)>getRank(sStack-> top()) ){
@@ -90,15 +118,15 @@ int  getAnswer ( ) {
  
     if ( isRightKuohao(thisWord) ) {
       for(;!isLeftKuohao(sStack->top());){
-      computeLast( mStack, sStack);}
+      computeLast( mStack, sStack);} //死循环警告
       sStack->pop();//希望sStack->top();是左括号
       
       
     }
 
-
+if (!mStack->empty()){
     cout << "mTop: "<< mStack->top()<<endl; 
-    
+    }else{cout << "mTop: empty"<<endl; }
   }
 
   int ans = mStack -> top();
@@ -107,11 +135,11 @@ int  getAnswer ( ) {
   if(mStack -> size() > 0||!sStack->empty()){
     cout<<mStack->top()<<endl;
     cout<<sStack->top()<<endl;
-    delete sStack;delete mStack;
+    delete sStack;delete mStack;//delete  figureTempQueue;
     return 114514;
   }
   else {
-    delete sStack ; delete mStack;
+    delete sStack ; delete mStack;//delete figureTempQueue;
     cout << "anser is :"<< endl;
     return ans ; 
   }
