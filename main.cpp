@@ -1,5 +1,4 @@
 #include <iostream>
-#include <queue>
 #include <stack>
 
 using namespace std ;
@@ -53,24 +52,33 @@ void computeLast(stack<int> * mStack, stack<char> * sStack){
 }
 
 int  getAnswer ( ) {
+
+
+  //字符串
   char s[SLENGTH];for ( int ii = 0 ; ii<SLENGTH; ii ++ ){s[ii]= 0;}
 
   cin >> s;
-
+  
+  //主栈和符号栈
   stack<int>  *  mStack = new stack<int>;
   stack<char> * sStack = new stack<char>;
   
   
-  bool isExistMinus = false;
-  
-  
-  
-  char thisWord;
+  //Flags
   bool flag = true;
   bool figureFlag = false;
+  //bool isExistMinus = false;
+  bool lastSignLeftKuoHao=true;
+  bool minusSignFlag=false;
+
+  //临时栈
   stack <char> * figureTempStack ;
+
+  //thisWord
+  char thisWord;
   for (int ii =0 ; flag != false &&( thisWord=s[ii])!=13 ; ii +=1){
-    // cout<< ii+1<<" Loop  " << thisWord<<endl; 
+    cout<< ii+1<<" Loop  " << thisWord<<endl; 
+    
     //isNum 判断
     if ( isNum(thisWord)&& figureFlag == false) { figureFlag =true;
       figureTempStack = new  stack<char>;
@@ -89,15 +97,34 @@ int  getAnswer ( ) {
       }
       delete figureTempStack;
       
-      if(!isExistMinus)mStack->push(sum);
+      //if(!isExistMinus)mStack->push(sum);
+      //else {
+      //    mStack->push(-sum);
+      //    isExistMinus=false;
+      //}
+      
+      if ( minusSignFlag == false) { mStack -> push ( sum );}
       else {
-          mStack->push(-sum);
-          isExistMinus=false;
+        mStack -> push( - sum );
+        minusSignFlag = false;
       }
       
       ii--;
       continue;
     }
+
+
+    //lastSignLeftKuoHao判断
+    if(lastSignLeftKuoHao == true && thisWord == 45) { 
+      minusSignFlag = true;
+      lastSignLeftKuoHao = false;
+      continue; //continue ------>
+    }else{
+      lastSignLeftKuoHao = false;
+    }
+    if(isLeftKuohao(thisWord)) { lastSignLeftKuoHao = true;}
+
+
     //等号判断
     if(isEq(thisWord)){flag = false;
       for (;!sStack->empty();)   //死循环！！！！！！
@@ -105,15 +132,20 @@ int  getAnswer ( ) {
     }
 
 
+    //运算符判断
+    if(isLeftKuohao(thisWord)){
+      if(minusSignFlag == true){
+        sStack -> pop();
+        sStack -> push('-');
+        minusSignFlag = false;
+      }
+      sStack ->push(thisWord);}
 
-
-    //其他判断
-    if(isLeftKuohao(thisWord)){sStack ->push(thisWord);}
     if( isAsign(thisWord)){
         
-        if(thisWord == 45) {
-            isExistMinus=true;
-        }
+      //  if(thisWord == 45) {
+      //      isExistMinus=true;
+      //  }
         
         
         
@@ -132,26 +164,27 @@ int  getAnswer ( ) {
         // sStack->push(thisWord);
       }
       
-      thisWord==45?sStack->push('+'):sStack->push(thisWord);
-      
+      //thisWord==45?sStack->push('+'):sStack->push(thisWord);
+      if(thisWord ==45) { minusSignFlag = true; sStack-> push ('+');}
+      else {sStack-> push(thisWord);}
     }
  
     if ( isRightKuohao(thisWord) ) {
       for(;!isLeftKuohao(sStack->top());){
       computeLast( mStack, sStack);} //死循环警告
       sStack->pop();//希望sStack->top();是左括号
-      
-      
     }
     //一直输出操作数栈顶
-    // if (!mStack->empty()){
-        // cout << "mTop: "<< mStack->top()<<endl; 
-    // }
-    // else{
-        // cout << "mTop: empty"<<endl; 
-    // }
+     if (!mStack->empty()){
+        cout << "mTop: "<< mStack->top()<<endl; 
+     }
+     else{
+        cout << "mTop: empty"<<endl; 
+    }
   }
 
+
+  //得出结论
   int ans = mStack -> top();
   mStack->pop();
 
