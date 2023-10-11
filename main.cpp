@@ -47,7 +47,7 @@ void computeLast(stack<int> * mStack, stack<char> * sStack){
         if (isLeftKuohao( sStack-> top())||sStack->empty()){return;}
         int tempNum1 = mStack -> top();mStack->pop();
         int tempNum2 = mStack -> top();mStack-> pop();
-        mStack->push(calc(sStack->top(),tempNum1 , tempNum2));
+        mStack->push(calc(sStack->top(),tempNum2 , tempNum1));//1
         sStack->pop();
         
 }
@@ -60,12 +60,17 @@ int  getAnswer ( ) {
   stack<int>  *  mStack = new stack<int>;
   stack<char> * sStack = new stack<char>;
   
+  
+  bool isExistMinus = false;
+  
+  
+  
   char thisWord;
   bool flag = true;
   bool figureFlag = false;
   stack <char> * figureTempStack ;
   for (int ii =0 ; flag != false &&( thisWord=s[ii])!=13 ; ii +=1){
-    cout<< ii+1<<" Loop  " << thisWord<<endl; 
+    // cout<< ii+1<<" Loop  " << thisWord<<endl; 
     //isNum 判断
     if ( isNum(thisWord)&& figureFlag == false) { figureFlag =true;
       figureTempStack = new  stack<char>;
@@ -83,7 +88,13 @@ int  getAnswer ( ) {
         iter=iter * 10; 
       }
       delete figureTempStack;
-      mStack->push(sum);
+      
+      if(!isExistMinus)mStack->push(sum);
+      else {
+          mStack->push(-sum);
+          isExistMinus=false;
+      }
+      
       ii--;
       continue;
     }
@@ -99,21 +110,30 @@ int  getAnswer ( ) {
     //其他判断
     if(isLeftKuohao(thisWord)){sStack ->push(thisWord);}
     if( isAsign(thisWord)){
+        
+        if(thisWord == 45) {
+            isExistMinus=true;
+        }
+        
+        
+        
       if ( sStack->empty() || getRank(thisWord)>getRank(sStack-> top()) ){
-        cout<<"isAsign >"<<endl;
-        sStack->push(thisWord);
+        // cout<<"isAsign >"<<endl;
+        // sStack->push(thisWord);
       }
       else if (getRank(thisWord)==getRank(sStack->top())){
-        cout << "isAsign =" << endl;
+        // cout << "isAsign =" << endl;
         computeLast(mStack,sStack);
-        sStack->push(thisWord);
+        // sStack->push(thisWord);
       }
       else if (getRank(thisWord)<getRank(sStack->top())){
-        cout << "isAsign <" << endl;
+        // cout << "isAsign <" << endl;
         computeLast(mStack,sStack);
-        sStack->push(thisWord);
-        
+        // sStack->push(thisWord);
       }
+      
+      thisWord==45?sStack->push('+'):sStack->push(thisWord);
+      
     }
  
     if ( isRightKuohao(thisWord) ) {
@@ -123,24 +143,28 @@ int  getAnswer ( ) {
       
       
     }
-
-if (!mStack->empty()){
-    cout << "mTop: "<< mStack->top()<<endl; 
-    }else{cout << "mTop: empty"<<endl; }
+    //一直输出操作数栈顶
+    // if (!mStack->empty()){
+        // cout << "mTop: "<< mStack->top()<<endl; 
+    // }
+    // else{
+        // cout << "mTop: empty"<<endl; 
+    // }
   }
 
   int ans = mStack -> top();
   mStack->pop();
 
   if(mStack -> size() > 0||!sStack->empty()){
-    cout<<mStack->top()<<endl;
-    cout<<sStack->top()<<endl;
+
+    // cout<<mStack->top()<<endl;
+    // cout<<sStack->top()<<endl;
     delete sStack;delete mStack;//delete  figureTempQueue;
     return 114514;
   }
   else {
     delete sStack ; delete mStack;//delete figureTempQueue;
-    cout << "anser is :"<< endl;
+    // cout << "answer is :"<< endl;
     return ans ; 
   }
 }
