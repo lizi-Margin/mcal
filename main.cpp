@@ -156,8 +156,7 @@ double  getAnswer ( ) {
       if (letterSum == 323) {sStack->push('t');}//tan
       if (letterSum == 322) {sStack->push('l');}//log() &
       if (letterSum == 211) {sStack -> push('g');} //lg()
-      if (letterSum == 218) {sStack->push('n');}//ln()
-      cout<< letterSum <<endl;
+      if (letterSum == 218) {sStack->push('n');}//ln() 
       specialFunctionFlag = false;
       letterSum = 0;
 
@@ -311,8 +310,11 @@ double  getAnswer ( ) {
 
 
 int main () {
+  cout<<"MCAL VER5.0 by shc 2023.10.11"<<endl;
   for(;1;){
+    cout << ""<<endl;
     cout << getAnswer() << endl;
-    cout <<"--------------**----------------"<<endl;
+    cout<<""<<endl;
+    cout <<"-                     -;"<<endl;
    }
 }
