@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include <stack>
-#include <cmath> 
+#include <cmath>
 
 using namespace std ;
 
@@ -43,7 +43,7 @@ bool isComma(char word){
  }  
 
 bool isEq( char word ){
-  return word==61;
+  return word==61 || word== 0; 
 }
 
 bool isLetter( char word ){
@@ -116,7 +116,7 @@ double  getAnswer ( ) {
   //字符串
   char s[SLENGTH];for ( int ii = 0 ; ii<SLENGTH; ii ++ ){s[ii]= 0;}
 
-  cin >> s;
+  cin.getline(s,SLENGTH); 
   
   //主栈和符号栈
   stack<double>  *  mStack = new stack<double>;
@@ -124,7 +124,7 @@ double  getAnswer ( ) {
   
   
   //Flags
-  bool flag = true;
+  bool circuitEndFlag = false;
   bool figureFlag = false;
   bool figureIsFloat = false;
   double numIter =0;
@@ -138,7 +138,9 @@ double  getAnswer ( ) {
   int letterSum =0;
   //thisWord 
   char thisWord;
-  for (int ii =0 ; flag != false &&( thisWord=s[ii])!=13 ; ii +=1){
+  for (int ii =0 ; circuitEndFlag != true && ii < SLENGTH  ; ii +=1){ 
+    thisWord = s[ii];
+    if ( thisWord == ' '){continue;}
     //cout<< ii+1<<" Loop  " << thisWord<<endl; 
  
     //特殊函数判断
@@ -217,7 +219,8 @@ double  getAnswer ( ) {
 
 
     //等号判断
-    if(isEq(thisWord)){flag = false;
+    if(isEq(thisWord)){
+      circuitEndFlag = true;
       for (;!sStack->empty();)   //死循环！！！！！！
       {computeLast(mStack,sStack);}
     }
@@ -310,7 +313,7 @@ double  getAnswer ( ) {
 
 
 int main () {
-  cout<<"MCAL VER5.0 by shc 2023.10.11"<<endl;
+  cout<<"MCAL VER5.1 by shc 2023.10.11"<<endl;
   for(;1;){
     cout << ""<<endl;
     cout << getAnswer() << endl;
