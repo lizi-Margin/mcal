@@ -1,5 +1,7 @@
+//2025 shc
 //2023.10.11 shc 
-//胡海洋debug 孙浩程code 朱瑞doc
+
+//胡海洋debug 孙浩程code 朱锐doc
 #define VER "5.2"
 //2023数据结构第一次上机作业 -- 计算器
 //支持运算：
@@ -22,7 +24,7 @@ using namespace std ;
 
 // 符号&数字判断
 bool isNum(char word){
-  return 48<= word && word <=57 || word == '.';
+  return (48<= word && word <=57) || word == '.';
 }
 
 bool isAsign(char word){
@@ -90,19 +92,21 @@ void doFunction(stack <double> * mStack , stack<char> * sStack){
   double var = mStack -> top();
   mStack -> pop(); 
 
-  double var2 ; 
+  double var2 = 0; 
   if(funType=='l'){
     if (mStack->empty()) { cout << "ERROR: log(v1,v2)函数应该输入两个参数！"<<endl;}
     var2=mStack -> top();
     mStack -> pop ();
     if (var2==')') { cout << "ERROR: log(v1,v2)函数应该输入两个参数！"<<endl;}
-   }
+  }
 
 
   if (funType == 's') { mStack -> push(sin(var));}
   else if (funType == 'c'){ mStack -> push(cos(var));}
   else if ( funType == 't') { mStack  -> push(tan(var));}
-  else if (funType == 'l') { mStack -> push (log(var)/log(var2));}
+  else if (funType == 'l') {
+    mStack -> push (log(var)/log(var2));
+  }
   else if ( funType == 'n') { mStack -> push(log(var));}
   else if (funType == 'g') {mStack -> push(log10(var));}
   return;
