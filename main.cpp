@@ -2,6 +2,7 @@
 //2023.10.11 shc 
 
 //胡海洋debug 孙浩程code 朱锐doc
+#include <cstdlib>
 #define VER "5.2"
 //2023数据结构第一次上机作业 -- 计算器
 //支持运算：
@@ -18,9 +19,20 @@
 #include <stack>
 #include <cmath>
 
-using namespace std ;
+#include <csignal> 
+
+using namespace std;
 
 #define SLENGTH 100000  //算式最大长度
+#define ERRORRES 114514
+
+void handle_signal(int sig) {
+  if (sig == SIGINT) {
+    cout.put('\n');
+    cout.flush();
+    exit(0);
+  }
+}
 
 // 符号&数字判断
 bool isNum(char word){
@@ -65,13 +77,13 @@ short getRank(char word){
 // 计算
 double calc ( char sign , double num1, double num2){
   
-  if(!isAsign(sign)) {return 114514;}
+  if(!isAsign(sign)) {return ERRORRES;}
   if( sign == 43) { return num1+num2;}
   if(sign == 45) { return num1-num2;}
   if ( sign == 42) { return num1*num2;}
   if ( sign == 47 ) { return num1/num2;}
   if (sign == 94 ) { return pow(num1,num2);}
-  return 114514;
+  return ERRORRES;
 }
 
 void computeLast(stack<double> * mStack, stack<char> * sStack){
@@ -120,6 +132,14 @@ double  getAnswer ( ) {
   char s[SLENGTH];for ( int ii = 0 ; ii<SLENGTH; ii ++ ){s[ii]= 0;}
 
   cin.getline(s,SLENGTH); 
+  if (cin.eof()) {  //处理Ctrl+D (EOF)
+    exit(0);
+    //return ERRORRES;
+  }
+  if (cin.fail()) {  //处理输入错误
+    cin.clear();
+    return ERRORRES;
+  }
   
   //主栈和符号栈
   stack<double>  *  mStack = new stack<double>;
@@ -306,7 +326,7 @@ double  getAnswer ( ) {
 
   if(mStack -> size() > 0||!sStack->empty()){
     delete sStack;delete mStack;
-    return 114514;
+    return ERRORRES;
   }
   else {
     delete sStack ; delete mStack; 
@@ -316,11 +336,14 @@ double  getAnswer ( ) {
 
 
 int main () {
-  cout<<"MCAL VER"<<VER<<" by shc 2023.10"<<endl;
-  for(;1;){
+  signal(SIGINT, handle_signal);
+  
+  cout<<"MCAL VER"<<VER<<" by shc 2023.10-2025"<<endl;
+  while (1) {
     cout << ""<<endl;
     cout << getAnswer() << endl;
     cout<<""<<endl;
     cout <<"-                     -;"<<endl;
-   }
+  }
+  return 0;
 }
