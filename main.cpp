@@ -1,6 +1,6 @@
 //2023.10.11 shc 
 //胡海洋debug 孙浩程code 朱瑞doc
-
+#define VER "5.2"
 //2023数据结构第一次上机作业 -- 计算器
 //支持运算：
 //+ - * / 加减乘除
@@ -9,7 +9,6 @@
 //ln(v) log(v1,v2) lg(v) 对数运算
 //以及上述运算的自由组合
 
-//算式必须加等号‘=’！
 //最大允许输入的算式长度为 SLENGTH  
 
 
@@ -313,7 +312,7 @@ double  getAnswer ( ) {
 
 
 int main () {
-  cout<<"MCAL VER5.1 by shc 2023.10.11"<<endl;
+  cout<<"MCAL VER"<<VER<<" by shc 2023.10"<<endl;
   for(;1;){
     cout << ""<<endl;
     cout << getAnswer() << endl;
